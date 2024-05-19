@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrypToDog | To encrypt</title>
+
+    <link rel="icon" type="png|image" href="/IMAGES/sailogo.png">
+    <link rel="stylesheet" href="CssOmarStyle.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        input[type="text"] {
+            background-color: black;
+            color: white;
+            border: 1px solid #00ff00;
+            padding: 5px;
+            border-radius: 2px;
+        }
+        .home-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .glowing-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .glowing-circle .image {
+            margin-bottom: 20px;
+        }
+        .logo#loading {
+            text-align: center;
+            font-size: 20px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+    <script src="matrix.js"></script>
+
+    <header class="header">
+        <div class="logo" id="loading"> Cryptodog Algorithm </div>
+        <script src="javaCry.js"></script>
+
+        <nav class="navbar">
+            <a href="#" style="--i:1;" class="active">Omar Samara</a>
+            <a href="#" style="--i:2;">Hussam Abdallah</a>
+            <a href="#" style="--i:3;">Mohammed Saleh </a>
+            <a href="#" style="--i:4;">Qusai Faraj</a>
+        </nav>
+    </header>
+
+    <section id="home" class="home">
+        <div class="box">
+            <h2 style="color: #00ff00; font-family: 'Courier New', monospace;">Encrypt</h2>
+            <textarea id="inputText" placeholder="Enter your secret message"></textarea>
+            <br><br>
+            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
+            <br>
+            <button onclick="encrypt()">Encrypt</button>
+            <textarea id="encryptedText" readonly></textarea>
+        </div>
+
+        <div class="box">
+            <h2 style="color: #00ff00; font-family: 'Courier New', monospace;">Decrypt</h2>
+            <textarea id="decryptedText" placeholder="Enter encrypted message"></textarea>
+            <br><br>
+            <input type="text" id="decryptionKey" placeholder="Enter decryption key">
+            <br>
+            <button onclick="decrypt()">Decrypt</button>
+            <textarea id="decryptedOutput" readonly></textarea>
+        </div>
+
+        <script>
+            function encrypt() {
+                const inputText = document.getElementById('inputText').value;
+                const key = document.getElementById('encryptionKey').value;
+                if (!key) {
+                    alert('Please enter an encryption key.');
+                    return;
+                }
+                
+           
+                let xorResult = '';
+                for (let i = 0; i < inputText.length; i++) {
+                    xorResult += String.fromCharCode(key.charCodeAt(i % key.length) ^ inputText.charCodeAt(i));
+                }
+
+             
+                const permutedResult = permute(xorResult, key);
+
+              
+                const base64Result = btoa(permutedResult);
+
+           
+                const reversedBase64Result = reverseString(base64Result);
+
+                document.getElementById('encryptedText').value = reversedBase64Result;
+            }
+    
+            function decrypt() {
+                const encryptedText = document.getElementById('decryptedText').value;
+                const key = document.getElementById('decryptionKey').value;
+                if (!key) {
+                    alert('Please enter a decryption key.');
+                    return;
+                }
+
+           
+                const reversedBase64Result = reverseString(encryptedText);
+
+                const decoded = atob(reversedBase64Result);
+
+                const reversedPermutedResult = reversePermute(decoded, key);
+
+             
+                let decryptedText = '';
+                for (let i = 0; i < reversedPermutedResult.length; i++) {
+                    decryptedText += String.fromCharCode(key.charCodeAt(i % key.length) ^ reversedPermutedResult.charCodeAt(i));
+                }
+
+                document.getElementById('decryptedOutput').value = decryptedText;
+            }
+
+            function permute(text, key) {
+                const permutedArray = text.split('');
+                for (let i = 0; i < key.length; i++) {
+                    const pos = key.charCodeAt(i) % text.length;
+                    const temp = permutedArray[i];
+                    permutedArray[i] = permutedArray[pos];
+                    permutedArray[pos] = temp;
+                }
+                return permutedArray.join('');
+            }
+
+            function reversePermute(text, key) {
+                const permutedArray = text.split('');
+                for (let i = key.length - 1; i >= 0; i--) {
+                    const pos = key.charCodeAt(i) % text.length;
+                    const temp = permutedArray[i];
+                    permutedArray[i] = permutedArray[pos];
+                    permutedArray[pos] = temp;
+                }
+                return permutedArray.join('');
+            }
+
+            function reverseString(str) {
+                return str.split('').reverse().join('');
+            }
+        </script>
+
+        <div class="home-content" data-scroll data-scroll-speed="-5"></div>
+
+        <div class="home-img">
+            <div style="padding: -1%" class="glowing-circle">
+                <span></span>
+                <span></span>
+                <div class="image">
+                    <img src="saianon.png" alt="">
+                </div>
+                
+                
+              
+                <div style="height: 0.25%;" class="logo" id="loading" >  Cryptodog Algorithm </div>
+            
+                
+               
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
